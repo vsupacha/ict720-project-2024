@@ -1,6 +1,9 @@
 # ict720-project-2024
 Repo to collect example of ICT720 course
 
+## Member
+Supachai Vorapojpisut
+
 ## Stakeholder
 1.  home owner
 2.  company staff
