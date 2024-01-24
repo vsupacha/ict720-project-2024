@@ -23,6 +23,14 @@ Supachai Vorapojpisut
 4.  **US4**: as a company staff, I want to contact a device owner, so that I can provide support to customers.
     *   **acceptance criteria #1** I can contact the device owner with alarm status.
 
+## software models
+1.  **Software architecture**
+    ![Device and server layers](./images/software_arch.jpg)
+2.  **Device-server communication**
+    ![Sequence diagram](./images/sequence_diagram_user_story_2.jpg)
+3.  **Device operation**
+    ![State machine diagram](./images/state_diagram_device.jpg)
+
 ## examples
 1.  **/taist_jan_18**
     *   template VS Code/Platform.io project with I2S sound driver.
