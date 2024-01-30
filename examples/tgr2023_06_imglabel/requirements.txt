@@ -1,0 +1,4 @@
+pyserial
+pyside6
+opencv-contrib-python
+numpy
