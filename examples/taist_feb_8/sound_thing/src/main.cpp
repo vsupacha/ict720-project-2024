@@ -1,9 +1,12 @@
 #include <Arduino.h>
 #include <task.h>
 #include <queue.h>
+
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
+
 #include "hw_mic.h"
 
 // constants
@@ -20,13 +23,18 @@
 #define WIFI_SSID         "Your SSID"
 #define WIFI_PASSWORD     "Your password"
 
+#define SOUND_DETECT_THRESHOLD   0.5
+#define SOUND_DETECT_COUNT       5
+
 // global variables
 WiFiClient wifi_client;
 PubSubClient mqtt_client(wifi_client);
+StaticJsonDocument<200> json_doc;
 
 // queue handle
 QueueHandle_t evt_queue;
 
+// callback function when command is received
 void on_cmd_received(char* topic, byte* payload, unsigned int length) {
   // ignored
 }
@@ -79,8 +87,10 @@ void comm_task(void *pvParameter) {
   float buf[BUF_SIZE];
   int buf_idx = 0;
   float avg_value;
-  bool detected = false;
-  static uint32_t prev_ms = 0; // last ms of sending MQTT
+  int detect_count = 0;
+  bool detected = false; 
+  uint32_t prev_ms = 0; // last ms of sending MQTT
+  uint32_t prev_detect_ms = 0; // last ms of detecting sound event
 
   // initialize serial and network
   Serial.begin(115200);
@@ -110,28 +120,58 @@ void comm_task(void *pvParameter) {
     }
     avg_value /= BUF_SIZE;
     // 3. do threshold and edge detection
-    if (avg_value > 0.5) { 
-      detected = true;
-
+    if (avg_value > SOUND_DETECT_THRESHOLD) { 
+      detect_count++;
+      if (detect_count > SOUND_DETECT_COUNT) {
+        detect_count = SOUND_DETECT_COUNT;
+      }
     } else {
-      detected = false;
-
+      detect_count--;
+      if (detect_count < 0) {
+        detect_count = 0;
+      }
+    }
+    if (!detected) {
+      if (detect_count > int(SOUND_DETECT_COUNT/2)) {
+        detected = true;
+        prev_detect_ms = millis();
+        json_doc.clear();
+        json_doc["status"] = "detected";
+        json_doc["timestamp"] = millis();
+        json_doc["detected"] = true;
+        if (mqtt_client.connected()) {
+          mqtt_client.publish(MQTT_SOUND_TOPIC, json_doc.as<String>().c_str());
+        }
+        Serial.println("Sound detected");
+      }
+    } else {
+      if (detect_count == 0) {
+        detected = false;
+        json_doc.clear();
+        json_doc["status"] = "silent";
+        json_doc["timestamp"] = millis();
+        json_doc["period"] = millis() - prev_detect_ms;
+        if (mqtt_client.connected()) {
+          mqtt_client.publish(MQTT_SOUND_TOPIC, json_doc.as<String>().c_str());
+        }
+        Serial.println("Sound silent");
+      }
     }
     // communicate with MQTT
     //Serial.printf("%d, %f, %d\n", millis(), value, detected);
     if (millis() - prev_ms > 2000) {
       prev_ms = millis();
+      json_doc.clear();
+      json_doc["status"] = "silent";
+      json_doc["timestamp"] = millis();
       if (mqtt_client.connected()) {
-        mqtt_client.publish(MQTT_HB_TOPIC, "1");
+        mqtt_client.publish(MQTT_HB_TOPIC, json_doc.as<String>().c_str());
       }
     }
   }
 }
 
 void setup() {
-  // prepare WiFi and MQTT
-
-
   // initialize RTOS task
   evt_queue = xQueueCreate(10, sizeof(float));
 
