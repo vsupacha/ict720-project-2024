@@ -16,6 +16,7 @@
 
 #define MQTT_BROKER       "broker.hivemq.com"
 #define MQTT_PORT         1883
+#define HIVEMQ_USERNAME   "taist_aiot_???"
 #define MQTT_SOUND_TOPIC  "taist/aiot/sound/dev_???"
 #define MQTT_HB_TOPIC     "taist/aiot/heartbeat/dev_???"
 #define MQTT_CMD_TOPIC    "taist/aiot/command/dev_???"
@@ -94,6 +95,10 @@ void comm_task(void *pvParameter) {
 
   // initialize serial and network
   Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);
+  delay(100);
+  WiFi.mode(WIFI_STA);
+  delay(100);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -101,7 +106,7 @@ void comm_task(void *pvParameter) {
   }
   mqtt_client.setServer(MQTT_BROKER, MQTT_PORT);
   mqtt_client.setCallback(on_cmd_received);
-  mqtt_client.connect("taist_sound_supachai");
+  mqtt_client.connect(HIVEMQ_USERNAME);
 
   // initialize buffer
   for (int i=0; i < BUF_SIZE; i++) {
@@ -162,7 +167,7 @@ void comm_task(void *pvParameter) {
     if (millis() - prev_ms > 2000) {
       prev_ms = millis();
       json_doc.clear();
-      json_doc["status"] = "silent";
+      json_doc["status"] = "heartbeat";
       json_doc["timestamp"] = millis();
       if (mqtt_client.connected()) {
         mqtt_client.publish(MQTT_HB_TOPIC, json_doc.as<String>().c_str());
@@ -199,7 +204,9 @@ void loop() {
   // execute MQTT loop
   if (mqtt_client.connected()) {
     mqtt_client.loop();
-    Serial.print("MQTT loop\n");
+    Serial.println("MQTT loop");
+  } else {
+    Serial.println("MQTT disconnected");
   }
   delay(1000);
 }

@@ -31,7 +31,44 @@ Supachai Vorapojpisut
 3.  **Device operation**
     ![State machine diagram](./images/state_diagram_device.jpg)
 
+
+
 ## examples
 1.  **/taist_jan_18**
     *   template VS Code/Platform.io project with I2S sound driver.
     *   sample sound at 16 kHz, 160-sample window, average of absolute values. 
+2.  **/taist_jan_25**
+    *   demonstration of FreeRTOS coding style.
+    *   two tasks for sampling and printing sound data, communicating with queue.
+3.  **/taist_feb1_1**
+    *   demonstration of MQTT coding style.
+    *   comm task send two MQTT messages, sound and heardbeat events.
+4.  **/taist_feb_8**
+    *   template Docker setting using Python 3.10 base image
+    *   Latest MQTT messages is kept for REST API access.
+
+## student projects
+1.  [Drowsiness Detection in Car Rental Service](https://github.com/pitijit/Ict720-software-2024)
+    *   Miss Pitijit Charoenwuttikajorn
+    *   Miss Onsasipat Kasamrach
+    *   Mr. Pongpon Lapsatid
+2.  [Automatic Park Lighting](https://github.com/CHIMAI-A/MTJ)
+    *   Miss Thi Chi Mai Le
+    *   Mr. Than Zaw Win
+    *   Miss Joanna Sophie Abraham
+3.  [Development of System to Evaluate Wheelchair User Capability](https://github.com/Aueaphum2541/Ray-Folk-Pun-Project2024/)
+    *   Ms. Sitaporn Anektanarojkul
+    *   Mr. Chakapat Chokchaisiri
+    *   Mr. Aueaphum Aueawatthanaphisut
+4.  [Smart Production Line](https://github.com/Watthanail/ICT720_Project_AIOT4)
+    *   Wathanai Luealamai
+    *   Kiattisak Phetmeesri
+    *   Thanaphum Withiso
+5.  [JunctionKanshi](https://github.com/karinzaa/JunctionKanshi)
+    *   Purit Jessadakannasoon
+    *   Rosi Indah Agustin
+    *   Karin Vitoonkijvanit
+6.  [Indoor Farming Climate Monitoring and Control System](https://github.com/thitiphum-bluesage/ICT720work)
+    *   Thitiphum Chaikarnjanakit
+    *   Witchaworn Munkong
+    *   Saponrachate​ Thamrongweingpung​

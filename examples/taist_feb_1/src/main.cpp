@@ -13,12 +13,13 @@
 
 #define MQTT_BROKER       "broker.hivemq.com"
 #define MQTT_PORT         1883
+#define HIVEMQ_USERNAME   "taist_aiot_???"
 #define MQTT_SOUND_TOPIC  "taist/aiot/sound/dev_???"
 #define MQTT_HB_TOPIC     "taist/aiot/heartbeat/dev_???"
 #define MQTT_CMD_TOPIC    "taist/aiot/command/dev_???"
 
 #define WIFI_SSID         "Your SSID"
-#define WIFI_PASSWORD     "Your password"
+#define WIFI_PASSWORD     "Your Password"
 
 // global variables
 WiFiClient wifi_client;
@@ -84,6 +85,10 @@ void comm_task(void *pvParameter) {
 
   // initialize serial and network
   Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);
+  delay(100);
+  WiFi.mode(WIFI_STA);
+  delay(100);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -91,7 +96,7 @@ void comm_task(void *pvParameter) {
   }
   mqtt_client.setServer(MQTT_BROKER, MQTT_PORT);
   mqtt_client.setCallback(on_cmd_received);
-  mqtt_client.connect("taist_sound_supachai");
+  mqtt_client.connect(HIVEMQ_USERNAME);
 
   // initialize buffer
   for (int i=0; i < BUF_SIZE; i++) {
