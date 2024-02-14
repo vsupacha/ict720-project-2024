@@ -31,8 +31,6 @@ Supachai Vorapojpisut
 3.  **Device operation**
     ![State machine diagram](./images/state_diagram_device.jpg)
 
-
-
 ## examples
 1.  **/taist_jan_18**
     *   template VS Code/Platform.io project with I2S sound driver.
@@ -49,17 +47,17 @@ Supachai Vorapojpisut
 
 ## student projects
 1.  [Drowsiness Detection in Car Rental Service](https://github.com/pitijit/Ict720-software-2024)
-    *   Miss Pitijit Charoenwuttikajorn
-    *   Miss Onsasipat Kasamrach
-    *   Mr. Pongpon Lapsatid
+    *   Pitijit Charoenwuttikajorn
+    *   Onsasipat Kasamrach
+    *   Pongpon Lapsatid
 2.  [Automatic Park Lighting](https://github.com/CHIMAI-A/MTJ)
-    *   Miss Thi Chi Mai Le
-    *   Mr. Than Zaw Win
-    *   Miss Joanna Sophie Abraham
+    *   Thi Chi Mai Le
+    *   Than Zaw Win
+    *   Joanna Sophie Abraham
 3.  [Development of System to Evaluate Wheelchair User Capability](https://github.com/Aueaphum2541/Ray-Folk-Pun-Project2024/)
-    *   Ms. Sitaporn Anektanarojkul
-    *   Mr. Chakapat Chokchaisiri
-    *   Mr. Aueaphum Aueawatthanaphisut
+    *   Sitaporn Anektanarojkul
+    *   Chakapat Chokchaisiri
+    *   Aueaphum Aueawatthanaphisut
 4.  [Smart Production Line](https://github.com/Watthanail/ICT720_Project_AIOT4)
     *   Wathanai Luealamai
     *   Kiattisak Phetmeesri
