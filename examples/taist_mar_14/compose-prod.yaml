@@ -1,20 +1,24 @@
 services:
   dev_api:
     build: ./dev_api
-    ports:
-      - ${DEV_API_PORT}:${DEV_API_PORT}
     env_file:
       - .env
     depends_on:
       - mongo
   user_api:
     build: ./user_api
-    ports:
-      - ${USER_API_PORT}:${USER_API_PORT}
     env_file:
       - .env
     depends_on:
       - mongo
+  line_bot:
+    build: ./line_bot
+    ports:
+      - ${LINE_WEBHOOK_PORT}:${LINE_WEBHOOK_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - user_api
   mqtt_con:
     build: ./mqtt_con
     env_file:

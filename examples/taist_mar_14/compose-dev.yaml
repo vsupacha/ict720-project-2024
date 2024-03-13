@@ -15,12 +15,28 @@ services:
       - .env
     depends_on:
       - mongo
+  line_bot:
+    build: ./line_bot
+    ports:
+      - ${LINE_WEBHOOK_PORT}:${LINE_WEBHOOK_PORT}    
+    env_file:
+      - .env
+    depends_on:
+      - user_api
+  test_api:
+    build: ./test_api
+    ports:
+      - ${TEST_API_PORT}:${TEST_API_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - mongo
   mqtt_con:
     build: ./mqtt_con
     env_file:
       - .env
     depends_on:
-      - dev_api  
+      - dev_api
   mongo:
     image: mongo
     restart: always
