@@ -81,7 +81,7 @@ async def handle_callback(request: Request):
 @app.get('/')
 async def liff_ui(request: Request):
     return templates.TemplateResponse(
-        request=request, name="index.html", context={"LIFF_ID": liff_id}
+        request=request, name="index.html", context={"LIFF_ID": liff_id}, headers={"Cache-Control": "no-cache"}
     )
 
 # code to handle Follow event
@@ -93,8 +93,12 @@ def handle_follow_event(event):
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     text = event.message.text
+    user_id = event.source.user_id
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
+        if text.startswith('#reg-'):
+            print('Register with ' + text.split('-')[1])
+            # register user and device
         resp = TextMessage(text='hello')
         line_bot_api.reply_message(
             ReplyMessageRequest(

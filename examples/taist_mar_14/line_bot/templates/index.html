@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
     <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
     <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script charset="utf-8" src="static/sdk.js"></script>
     <title>Registration</title>
 </head>
 <body>
@@ -28,34 +28,42 @@
     </ons-page>
     <script>
         const liff_id = '{{LIFF_ID}}';
-        liff.init({
-            liffId: liff_id, 
-            withLoginOnExternalBrowser: true, // Enable automatic login process
-        }).then(() => {
-            liff.getProfile().then((profile) => {
-                const user_name = profile.displayName;
-                document.getElementById('user_name').value = user_name;
-            }).catch((err) => {
-                console.log(err.code, err.message);
-            });
-            document.getElementById('cmd_btn').onclick = function() {
-                liff.scanCodeV2().then((result) => {
-                    const dev_id = result.value;
-                    document.getElementById('dev_id').value = dev_id;
-                    liff.sendMessages([{
-                        type: 'text',
-                        text: 'test'
-                    }]).then(() => {
-                        liff.closeWindow();
-                    }).catch((err) => {
-                        console.log(err.code, err.message);
-                    });
+        document.addEventListener("DOMContentLoaded", function() {
+            liff.init({
+                liffId: liff_id, 
+                withLoginOnExternalBrowser: false, // Enable automatic login process
+            }).then(() => {
+                liff.getProfile().then((profile) => {
+                    const user_name = profile.displayName;
+                    document.getElementById('user_name').value = user_name;
                 }).catch((err) => {
                     console.log(err.code, err.message);
+                    alert('liff.getProfile(): ' + err.message);
                 });
-            };
-        }).catch((err) => {
-            console.log(err.code, err.message);
+                document.getElementById('cmd_btn').onclick = function() {
+                    liff.scanCodeV2().then((result) => {
+                        const dev_id = result.value;
+                        document.getElementById('dev_id').value = dev_id;
+                        // get user id from LIFF
+                        const user_id = liff.getContext().userId;
+                        liff.sendMessages([{
+                            type: 'text',
+                            text: '#reg-' + dev_id
+                        }]).then(() => {
+                            liff.closeWindow();
+                        }).catch((err) => {
+                            console.log(err.code, err.message);
+                            alert('liff.sendMessages(): ' + err.message);
+                        });
+                    }).catch((err) => {
+                        console.log(err.code, err.message);
+                        alert('liff.scanCodeV2(): ' + err.message);
+                    });
+                };
+            }).catch((err) => {
+                console.log(err.code, err.message);
+                alert('liff.init(): ' + err.code + err.message);
+            });
         });
     </script>
 </body>
