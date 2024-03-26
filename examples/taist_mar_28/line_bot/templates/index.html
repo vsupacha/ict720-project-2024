@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://line.me/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+    <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <script charset="utf-8" src="static/sdk.js"></script>
+    <title>Registration</title>
+</head>
+<body>
+    <ons-page id="main_page">
+        <ons-toolbar>
+            <div class="center">Device register</div>
+        </ons-toolbar>
+        <p>
+            <h3>Welcome</h3>
+        </p>
+        <p>
+            <ons-input id="user_name" modifier="underbar" placeholder="User name" float></ons-input>
+        </p>
+        <p>
+            <ons-input id="dev_id" modifier="underbar" placeholder="Device ID" float></ons-input>
+        </p>
+        <ons-button id="cmd_btn">Scan QR</ons-button>
+    </ons-page>
+    <script>
+        const liff_id = '{{LIFF_ID}}';
+        document.addEventListener("DOMContentLoaded", function() {
+            liff.init({
+                liffId: liff_id, 
+                withLoginOnExternalBrowser: false, // Enable automatic login process
+            }).then(() => {
+                liff.getProfile().then((profile) => {
+                    const user_name = profile.displayName;
+                    document.getElementById('user_name').value = user_name;
+                }).catch((err) => {
+                    console.log(err.code, err.message);
+                    alert('liff.getProfile(): ' + err.message);
+                });
+                document.getElementById('cmd_btn').onclick = function() {
+                    liff.scanCodeV2().then((result) => {
+                        const dev_id = result.value;
+                        document.getElementById('dev_id').value = dev_id;
+                        // get user id from LIFF
+                        const user_id = liff.getContext().userId;
+                        liff.sendMessages([{
+                            type: 'text',
+                            text: '#reg-' + dev_id
+                        }]).then(() => {
+                            liff.closeWindow();
+                        }).catch((err) => {
+                            console.log(err.code, err.message);
+                            alert('liff.sendMessages(): ' + err.message);
+                        });
+                    }).catch((err) => {
+                        console.log(err.code, err.message);
+                        alert('liff.scanCodeV2(): ' + err.message);
+                    });
+                };
+            }).catch((err) => {
+                console.log(err.code, err.message);
+                alert('liff.init(): ' + err.code + err.message);
+            });
+        });
+    </script>
+</body>
+</html>

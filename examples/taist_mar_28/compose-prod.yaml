@@ -1,0 +1,33 @@
+services:
+  dev_api:
+    build: ./dev_api
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+  user_api:
+    build: ./user_api
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+  line_bot:
+    build: ./line_bot
+    ports:
+      - ${LINE_WEBHOOK_PORT}:${LINE_WEBHOOK_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - user_api
+  mqtt_con:
+    build: ./mqtt_con
+    env_file:
+      - .env
+    depends_on:
+      - dev_api  
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+

@@ -1,0 +1,3 @@
+mediapipe
+scikit-learn
+opencv-python

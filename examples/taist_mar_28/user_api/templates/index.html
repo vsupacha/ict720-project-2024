@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Item Details</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <h1>Welcome to Sound Detector {{dummy}}</h1>
+    <input type="text" id="user_name" placeholder="Enter full name"><br>
+    <input type="text" id="user_phone" placeholder="Enter phone number"><br>
+    <input type="text" id="user_address" placeholder="Enter street address"><br>
+    <input type="submit" id="submit" value="Submit">
+    <script>
+        document.getElementById('submit').addEventListener('click', function() {
+            var user_name = document.getElementById('user_name').value;
+            var user_phone = document.getElementById('user_phone').value;
+            var user_address = document.getElementById('user_address').value;
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_name: user_name,
+                    user_phone: user_phone,
+                    user_address: user_address
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+            }).catch(function(error) {
+                console.log(error);
+            });
+        });
+    </script>
+</body>
+</html>

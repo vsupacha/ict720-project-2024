@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+line-bot-sdk
+jinja2
+pymongo
