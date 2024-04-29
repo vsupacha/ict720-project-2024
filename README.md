@@ -44,6 +44,26 @@ Supachai Vorapojpisut
 4.  **/taist_feb_8**
     *   template Docker setting using Python 3.10 base image
     *   Latest MQTT messages is kept for REST API access.
+5.  **/taist_feb_15**
+    *   template Docker compose setting.
+    *   Use REST API to provide MQTT data access.
+6.  **/taist_feb_22**
+    *   template example for API testing.
+    *   Use REST API to provide database access.
+7.  **/taist_mar_14**
+    *   template example for LINE bot.
+    *   Use port forwarding of VS Code to host LINE webhook.
+8.  **/taist_mar_26**
+    *   example code for MediaPipe solution.
+9.  **/taist_mar_28**
+    *   template example for LINE bot with multimedia features.
+    *   Use MediaPipe with ImageMessage to report detected objects.
+10. **/taist_apr_4**
+    *   template example for web API using Streamlit.
+    *   Use Pandas to import and analyze data.
+11. **/taist_apr_30**
+    *   template example for devices in Home Assistant environment.
+    *   Use ESPHome and MQTT-based features.
 
 ## student projects
 1.  [Drowsiness Detection in Car Rental Service](https://github.com/pitijit/Ict720-software-2024)

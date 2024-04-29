@@ -1,6 +1,6 @@
 #include "main.h"
 #include "hw_camera.h"
-#include <tgr2023_inferencing.h>
+#include <spoon_inferencing.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 
 // constants

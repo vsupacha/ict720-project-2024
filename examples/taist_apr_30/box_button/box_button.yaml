@@ -1,0 +1,39 @@
+esphome:
+  name: box_button
+
+esp32:
+  board: esp32s3box
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "HA_demo"
+  password: "home_assistant"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Box Button Fallback Hotspot"
+    password: "VXDiz2Qp6hr5"
+
+captive_portal:
+    
+# button
+binary_sensor:
+  - platform: gpio
+    name: "Button"
+    pin:
+      number: 0
+      inverted: true
+      mode:
+        input: true
+        pullup: true
