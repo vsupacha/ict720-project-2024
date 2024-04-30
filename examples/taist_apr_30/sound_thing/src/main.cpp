@@ -19,7 +19,7 @@
 #define HA_USER           "ha_device"
 #define HA_PASSWD         "ha_passwd"
 
-#define DEV_NAME                "t-simcam-????"
+#define DEV_NAME                "t-simcam-xxxx"
 #define MQTT_DISCOVERY_TOPIC    "homeassistant/binary_sensor/%s/config"
 #define MQTT_AVAILABLE_TOPIC    "homeassistant/binary_sensor/%s/available"
 #define MQTT_STATE_TOPIC        "homeassistant/binary_sensor/%s/state"
@@ -95,7 +95,7 @@ void comm_task(void *pvParameter) {
   bool detected = false; 
   uint32_t prev_ms = 0; // last ms of sending MQTT
   uint32_t prev_detect_ms = 0; // last ms of detecting sound event
-  char topic_buf[100];
+  char topic_buf[256];
 
   // initialize serial and network
   Serial.begin(115200);
@@ -111,15 +111,24 @@ void comm_task(void *pvParameter) {
   mqtt_client.setServer(MQTT_BROKER, MQTT_PORT);
   mqtt_client.setCallback(on_cmd_received);
   mqtt_client.connect(DEV_NAME, HA_USER, HA_PASSWD);
-
+  mqtt_client.setBufferSize(512);
+  
   // MQTT discovery
   json_doc.clear();
   json_doc["name"] = DEV_NAME;
   json_doc["device_class"] = "motion";
   sprintf(topic_buf, MQTT_STATE_TOPIC, DEV_NAME);
   json_doc["state_topic"] = topic_buf;
-  sprintf(topic_buf, MQTT_DISCOVERY_TOPIC, DEV_NAME);
-  mqtt_client.publish(topic_buf, json_doc.as<String>().c_str());
+  json_doc["unique_id"] = DEV_NAME;
+  JsonObject dev_obj = json_doc["device"].to<JsonObject>();
+  dev_obj["name"] = DEV_NAME;
+  JsonArray iden_arr = dev_obj["identifiers"].to<JsonArray>();
+  iden_arr.add(DEV_NAME);
+  char config_topic[256];
+  sprintf(config_topic, MQTT_DISCOVERY_TOPIC, DEV_NAME);
+  char payload_buf[256];
+  serializeJson(json_doc, payload_buf);
+  boolean status = mqtt_client.publish(config_topic, payload_buf, strlen(payload_buf));
 
   // initialize buffer
   for (int i=0; i < BUF_SIZE; i++) {
@@ -201,7 +210,7 @@ void setup() {
     "comm_task",  // name of task
     8192,         // stack size of task
     NULL,         // parameter of the task
-    2,            // priority of the task
+    4,            // priority of the task
     NULL          // task handle to keep track of created task
   );
 }
@@ -214,5 +223,5 @@ void loop() {
   } else {
     Serial.println("MQTT disconnected");
   }
-  delay(1000);
+  delay(2000);
 }
